@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import Web3Modal from "web3modal";
 
 
-import { chatAppAddress, ChatAppABI, ChatAppAddress } from "../Context/constants";
+import {  ChatAppABI, ChatAppAddress } from "../Context/constants";
 
 export const checkIfWalletConnected = async () => {
     try {
@@ -25,24 +25,26 @@ export const connectWallet = async () => {
             method: "eth_requestAccounts",
         });
         const firstAccount = accounts[0];
+        console.log( firstAccount);
+        console.log(ChatAppABI);
         return firstAccount;
     } catch (error) {
         console.log(error);
     }
 };
 
-const fetchContract = (signerOrProvider) => 
-    new ethers.Contract(ChatAppABI, ChatAppAddress, signerOrProvider);
-
+const fetchContract = (signerOrProvider) => new ethers.Contract(ChatAppABI, ChatAppAddress, signerOrProvider);
 
 export const connectingWithContract = async () => {
     try{
-        const web3Modal = new Web3Modal();
-        const connection = await web3Modal.connect();
+        const web3modal = new Web3Modal();
+        const connection = await web3modal.connect();
         const provider = new ethers.providers.Web3Provider(connection);
         const signer = provider.getSigner();
         const contract = fetchContract(signer);
-
+        
+        console.log('Connected contract:', contract); // Kiểm tra contract trước khi return
+        
         return contract;
     } catch (error) {
         console.log(error);
